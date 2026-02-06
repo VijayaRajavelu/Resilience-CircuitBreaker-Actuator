@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: employeeservice
+server:
+  port: 8762
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      addressservice:
+        register-health-indicator: true
+        sliding-window-size: 5
+        minimumNumberOfCalls: 3
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 5s
+  retry:
+    instances:
+      addressservice:
+        max-attempts: 3
+        wait-duration: 2s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+
+
+  logging:
+    level:
+      com.example.feign: DEBUG
+      org.springframework.cloud.openfeign: DEBUG
